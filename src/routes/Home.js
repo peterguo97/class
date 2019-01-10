@@ -5,7 +5,7 @@ import { DatePicker } from 'antd';
 function Home() {
     return (
       <div style={{ margin: 100 }}>
-        <h1>Hello world</h1>
+        <h1>扈总你好</h1>
         <hr /><br />
         <DatePicker />
       </div>

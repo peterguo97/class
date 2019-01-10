@@ -6,11 +6,12 @@ const base = require('./webpack.base');
 const dev = {
     devServer: {
         contentBase: path.join(__dirname, './dist'),
+        host: '0.0.0.0',
         port: 8080,
         publicPath: '/',
         overlay: true,
         compress: true,
-        open: true,
+        open: false,
         hot: true,
         inline: true,
         historyApiFallback: true,

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import { Select, DatePicker, Button, Table, message } from 'antd';
+import { getDate } from '../util/utils';
 const Option = Select.Option;
 
 
@@ -33,8 +35,9 @@ function handleChange(value) {
 class SearchClass extends React.Component {
     constructor() {
         super();
+        var date = getDate();
         this.state = {
-            date: null,
+            date: date,
             class: null,
             build: null,
             time: null
@@ -54,7 +57,7 @@ class SearchClass extends React.Component {
     }
 
     handleClick = () => {
-        if(!this.state.build || this.state.date) {
+        if(!this.state.build || !this.state.date) {
             message.error("筛选范围过大，请至少选择教学楼以及日期两项！");
             return;
         }
@@ -94,10 +97,10 @@ class SearchClass extends React.Component {
         return(
             <div>
                 <div style={{textAlign: "center"}}>
-                    <Select defaultValue="请选择教学楼" style={{ width: 120, marginRight: 10 }} onChange={this.handleBuildChange}>
+                    <Select defaultValue="请选择教学楼" style={{ width: 140, marginRight: 10 }} onChange={this.handleBuildChange}>
                         {option}
-                    </Select>               
-                    <DatePicker onChange={this.handleTimeChange} />
+                    </Select>            
+                    <DatePicker defaultValue={moment(this.state.date, 'YYYY-MM-DD')} onChange={this.handleTimeChange} />
                     <Select defaultValue="请选择占用时间" style={{ width: 160, marginLeft: 10 }} onChange={this.handleTimeChange}>
                         {time}
                     </Select>
