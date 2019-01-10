@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Select, DatePicker, Button, Table } from 'antd';
+import { Select, DatePicker, Button, Table, message } from 'antd';
 const Option = Select.Option;
 
 
@@ -19,30 +19,11 @@ const timelist = [
     {id: 5, name: "第五节"},
 ]
 
-const cols = [
-    { title: '教学楼', dataIndex: 'build', key: 'build' },
-    { title: '教室', dataIndex: 'class', key: 'class' },
-    { title: '时间', dataIndex: 'time', key: 'time' },
-    { title: '状态', 
-        dataIndex: 'status',
-        key: 'status',
-        render: (text,record) => {
-            const path = {
-                pathname: '/form',
-                query: record
-            }
-            return (
-                <span>{ text ? <Link to={path}><Button type="primary">空闲</Button></Link>: <Button type="danger">忙碌</Button> }</span>
-            )
-        },
-    },
-]
-
 const datas = [
-    { key: '1', build: "教十楼", class: "A101", time: "第一节课", status: 1 },
-    { key: '2', build: "教十一楼", class: "A102", time: "第一节课", status: 0 },
-    { key: '3', build: "教十二楼", class: "A104", time: "第一节课", status: 0 },
-    { key: '4', build: "教七楼", class: "A107", time: "第一节课", status: 1 },
+    { key: '1', build: "教十楼", class: "A101", time: "第一节", status: 1 },
+    { key: '2', build: "教十一楼", class: "A102", time: "第一节", status: 0 },
+    { key: '3', build: "教十二楼", class: "A104", time: "第一节", status: 0 },
+    { key: '4', build: "教七楼", class: "A107", time: "第二节", status: 1 },
   ];
 
 function handleChange(value) {
@@ -50,8 +31,55 @@ function handleChange(value) {
   }
 
 class SearchClass extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            date: null,
+            class: null,
+            build: null,
+            time: null
+        }
+    }
+
+    handleTimeChange = (moment, str) => {
+        this.setState({
+            date: str
+        })
+    }
+
+    handleBuildChange = (value) => {
+        this.setState({
+            build: value
+        })
+    }
+
+    handleClick = () => {
+        if(!this.state.build || this.state.date) {
+            message.error("筛选范围过大，请至少选择教学楼以及日期两项！");
+            return;
+        }
+    }
 
     render() {
+        const cols = [
+            { title: '教学楼', dataIndex: 'build', key: 'build' },
+            { title: '教室', dataIndex: 'class', key: 'class' },
+            { title: '时间', dataIndex: 'time', key: 'time' },
+            { title: '状态', 
+                dataIndex: 'status',
+                key: 'status',
+                render: (text,record) => {
+                    record.date = this.state.date;
+                    const path = {
+                        pathname: '/form',
+                        query: record
+                    }
+                    return (
+                        <span>{ text ? <Link to={path}><Button type="primary">空闲</Button></Link>: <Button type="danger">忙碌</Button> }</span>
+                    )
+                },
+            },
+        ]
         const option = buildlist.map((item) => {
             return(
                 <Option key={item.id} value={item.name}>{item.name}</Option>
@@ -66,15 +94,15 @@ class SearchClass extends React.Component {
         return(
             <div>
                 <div style={{textAlign: "center"}}>
-                    <Select defaultValue="请选择教学楼" style={{ width: 120, marginRight: 10 }} onChange={handleChange}>
+                    <Select defaultValue="请选择教学楼" style={{ width: 120, marginRight: 10 }} onChange={this.handleBuildChange}>
                         {option}
                     </Select>               
-                    <DatePicker />
-                    <Select defaultValue="请选择占用时间" style={{ width: 160, marginLeft: 10 }} onChange={handleChange}>
+                    <DatePicker onChange={this.handleTimeChange} />
+                    <Select defaultValue="请选择占用时间" style={{ width: 160, marginLeft: 10 }} onChange={this.handleTimeChange}>
                         {time}
                     </Select>
                     <span style={{marginLeft: 10}}>
-                        <Button type="primary" shape="circle" icon="search" />
+                        <Button type="primary" onClick={this.handleClick} shape="circle" icon="search" />
                     </span>
                 </div>
                 <div>

@@ -21,7 +21,9 @@ function IndexPage(props) {
                 <Link to="/search">空闲教室查询</Link>
             </Menu.Item>
             <Menu.Item key="2">当前可用教室</Menu.Item>
-            <Menu.Item key="3">我的申请</Menu.Item>
+            <Menu.Item key="3">
+              <Link to="/apply">我的申请</Link>
+            </Menu.Item>
           </Menu>
         </Header>
         <Content style={{ padding: '0 50px' }}>

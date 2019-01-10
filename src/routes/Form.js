@@ -1,7 +1,8 @@
 import React from 'react'
+import moment from 'moment';
 
 import {
-    Form, DatePicker, Button, Select, Input
+    Form, DatePicker, Button, Select, Input, notification,
   } from 'antd';
 
 const { TextArea } = Input;
@@ -22,16 +23,51 @@ const timelist = [
     {id: 5, name: "第五节"},
 ]
 
+function getDate() {
+    var date = new Date();
+
+    // 获取当前月份
+    var nowMonth = date.getMonth() + 1;
+
+    // 获取当前是几号
+    var strDate = date.getDate();
+
+    // 添加分隔符“-”
+    var seperator = "-";
+
+    // 对月份进行处理，1-9月在前面添加一个“0”
+    if (nowMonth >= 1 && nowMonth <= 9) {
+    nowMonth = "0" + nowMonth;
+    }
+
+    // 对月份进行处理，1-9号在前面添加一个“0”
+    if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+    }
+
+    // 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
+    var nowDate = date.getFullYear() + seperator + nowMonth + seperator + strDate;
+
+    return nowDate;
+}
+
 class ClassForm extends React.Component {
     constructor(props) {
         super(props)
         const data = props.location.query;
+        this.state = {
+            date: null,
+        }
         if (data) {
+            console.log(data.date)
             this.state = {
                 class: data.class,
                 build: data.build,
                 time: data.time,
+                date: data.date,
             }
+        } else {
+            this.state.date = getDate();
         }
     }
     handleChange = (value) => {
@@ -46,20 +82,14 @@ class ClassForm extends React.Component {
         }
   
         // Should format date value before submit.
-        const rangeValue = fieldsValue['range-picker'];
-        const rangeTimeValue = fieldsValue['range-time-picker'];
         const values = {
           ...fieldsValue,
-          'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD'),
-          'date-time-picker': fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss'),
-          'month-picker': fieldsValue['month-picker'].format('YYYY-MM'),
-          'range-picker': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
-          'range-time-picker': [
-            rangeTimeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-            rangeTimeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-          ],
-          'time-picker': fieldsValue['time-picker'].format('HH:mm:ss'),
+          'date-picker': fieldsValue['date'].format('YYYY-MM-DD'),
         };
+        notification['success']({
+            message: "消息通知",
+            description: "您的教室申请请求已发往后台审核,经后台人员审核后即可使用该教室",
+        })
         console.log('Received values of form: ', values);
       });
     }
@@ -77,11 +107,10 @@ class ClassForm extends React.Component {
         },
       };
       const config = {
-        rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+        rules: [{ required: true, message: 'Please select time!' }],
+        initialValue: moment(this.state.date, 'YYYY-MM-DD'),
       };
-      const rangeConfig = {
-        rules: [{ type: 'array', required: true, message: 'Please select time!' }],
-      };
+     
       return (
         <Form onSubmit={this.handleSubmit}>
             <Form.Item
@@ -96,22 +125,30 @@ class ClassForm extends React.Component {
                 {...formItemLayout}
                 label="楼号"
             >
-                 <Select defaultValue="教八" style={{ width: 120, marginRight: 10 }} onChange={this.handleChange}>
-                { 
-                    buildlist.map((item) => {
-                        return(
-                            <Option key={item.id} value={item.name}>{item.name}</Option>
-                        )
-                    })
-                }
-                </Select>
+                {getFieldDecorator('build', {
+                    rules: [
+                    { required: true, message: '请选择楼号!' },
+                    ],
+                    initialValue: this.state.build,
+                })(
+                    <Select style={{ width: 120, marginRight: 10 }} onChange={this.handleChange}>
+                    { 
+                        buildlist.map((item) => {
+                            return(
+                                <Option key={item.id} value={item.name}>{item.name}</Option>
+                            )
+                        })
+                    }
+                    </Select>
+                )}
             </Form.Item>
             <Form.Item
                 {...formItemLayout}
                 label="教室号"
             >
-                {getFieldDecorator('note', {
+                {getFieldDecorator('class', {
                     rules: [{ required: true, message: '请选择你要占用的教室!' }],
+                    initialValue: this.state.class,
                 })(
                     <Input style={{width: "180px"}} size="default" />
                 )}
@@ -122,6 +159,7 @@ class ClassForm extends React.Component {
                 >
                 {getFieldDecorator('time', {
                     rules: [{ required: true, message: '请选择占用时间!' }],
+                    initialValue: this.state.time,
                 })(
                     <Select
                     placeholder="请选择占用时间"
