@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Select, DatePicker, Button, Table } from 'antd';
 const Option = Select.Option;
 
@@ -22,14 +23,26 @@ const cols = [
     { title: '教学楼', dataIndex: 'build', key: 'build' },
     { title: '教室', dataIndex: 'class', key: 'class' },
     { title: '时间', dataIndex: 'time', key: 'time' },
-    { title: '状态', dataIndex: 'status', key: 'status' },
+    { title: '状态', 
+        dataIndex: 'status',
+        key: 'status',
+        render: (text,record) => {
+            const path = {
+                pathname: '/form',
+                query: record
+            }
+            return (
+                <span>{ text ? <Link to={path}><Button type="primary">空闲</Button></Link>: <Button type="danger">忙碌</Button> }</span>
+            )
+        },
+    },
 ]
 
 const datas = [
-    { key: '1', build: "教十楼", class: "A101", time: "第一节课", status: "空闲" },
-    { key: '2', build: "教十一楼", class: "A102", time: "第一节课", status: "忙碌" },
-    { key: '3', build: "教十二楼", class: "A104", time: "第一节课", status: "空闲" },
-    { key: '4', build: "教七楼", class: "A107", time: "第一节课", status: "空闲" },
+    { key: '1', build: "教十楼", class: "A101", time: "第一节课", status: 1 },
+    { key: '2', build: "教十一楼", class: "A102", time: "第一节课", status: 0 },
+    { key: '3', build: "教十二楼", class: "A104", time: "第一节课", status: 0 },
+    { key: '4', build: "教七楼", class: "A107", time: "第一节课", status: 1 },
   ];
 
 function handleChange(value) {
@@ -37,6 +50,7 @@ function handleChange(value) {
   }
 
 class SearchClass extends React.Component {
+
     render() {
         const option = buildlist.map((item) => {
             return(
@@ -52,7 +66,7 @@ class SearchClass extends React.Component {
         return(
             <div>
                 <div style={{textAlign: "center"}}>
-                    <Select defaultValue="请选择教室" style={{ width: 120, marginRight: 10 }} onChange={handleChange}>
+                    <Select defaultValue="请选择教学楼" style={{ width: 120, marginRight: 10 }} onChange={handleChange}>
                         {option}
                     </Select>               
                     <DatePicker />

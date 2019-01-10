@@ -5,6 +5,7 @@ import {
 import Home from './routes/Home';
 import IndexPage from './routes/Layout';
 import SearchClass from './routes/SearchClass';
+import WrappedTimeRelatedForm from './routes/Form'
 
 function App() {
     return(
@@ -13,6 +14,7 @@ function App() {
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <Route path="/search" component={SearchClass} />
+                    <Route path="/form" component={WrappedTimeRelatedForm} />
                 </Switch>
             </IndexPage>
         </Router>
