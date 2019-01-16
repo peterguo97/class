@@ -4,5 +4,19 @@
             "id": 1,
             "pic": "./public/girl.jpg"
         }
+    ],
+
+    "homepage": [
+        { "key": 1, "build": "教十楼", "class": "A101", "time": "第一节", "status": 1 },
+        { "key": 2, "build": "教十一楼", "class": "A102", "time": "第一节", "status": 1 },
+        { "key": 3, "build": "教十二楼", "class": "A104", "time": "第一节", "status": 1 },
+        { "key": 4, "build": "教七楼", "class": "A107", "time": "第二节", "status": 1 }
+    ],
+
+    "search10": [
+        { "key": 1, "build": "教十楼", "class": "B101", "time": "第一节", "status": 1 },
+        { "key": 2, "build": "教十楼", "class": "B201", "time": "第二节", "status": 1 },
+        { "key": 3, "build": "教十楼", "class": "B401", "time": "第二节", "status": 1 },
+        { "key": 4, "build": "教十楼", "class": "B501", "time": "第四节", "status": 1 }
     ]
 }

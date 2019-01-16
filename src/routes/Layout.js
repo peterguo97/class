@@ -18,11 +18,13 @@ function IndexPage(props) {
             style={{ lineHeight: '64px' }}
           >
             <Menu.Item key="1">
-                <Link to="/search">空闲教室查询</Link>
+                <Link to="/app/search">空闲教室查询</Link>
             </Menu.Item>
-            <Menu.Item key="2">当前可用教室</Menu.Item>
+            <Menu.Item key="2">
+                <Link to="/app/home">当前可用教室</Link>
+            </Menu.Item>
             <Menu.Item key="3">
-              <Link to="/apply">我的申请</Link>
+              <Link to="/app/apply">我的申请</Link>
             </Menu.Item>
           </Menu>
         </Header>

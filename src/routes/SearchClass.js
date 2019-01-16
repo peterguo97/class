@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import axios from 'axios';
 import { Select, DatePicker, Button, Table, message } from 'antd';
 import { getDate } from '../util/utils';
 const Option = Select.Option;
@@ -21,13 +22,6 @@ const timelist = [
     {id: 5, name: "第五节"},
 ]
 
-const datas = [
-    { key: '1', build: "教十楼", class: "A101", time: "第一节", status: 1 },
-    { key: '2', build: "教十一楼", class: "A102", time: "第一节", status: 0 },
-    { key: '3', build: "教十二楼", class: "A104", time: "第一节", status: 0 },
-    { key: '4', build: "教七楼", class: "A107", time: "第二节", status: 1 },
-  ];
-
 function handleChange(value) {
     console.log(`selected ${value}`);
   }
@@ -37,6 +31,7 @@ class SearchClass extends React.Component {
         super();
         var date = getDate();
         this.state = {
+            data: [],
             date: date,
             class: null,
             build: null,
@@ -61,6 +56,11 @@ class SearchClass extends React.Component {
             message.error("筛选范围过大，请至少选择教学楼以及日期两项！");
             return;
         }
+        axios.get('/api/search10').then((mes)=>{
+            this.setState({
+                data: mes.data,
+            })
+        })
     }
 
     render() {
@@ -74,7 +74,7 @@ class SearchClass extends React.Component {
                 render: (text,record) => {
                     record.date = this.state.date;
                     const path = {
-                        pathname: '/form',
+                        pathname: '/app/form',
                         query: record
                     }
                     return (
@@ -110,7 +110,7 @@ class SearchClass extends React.Component {
                 </div>
                 <div>
                 <h3 style={{ marginTop: 2, marginBottom: 16 }}>查询结果</h3>
-                <Table columns={cols} dataSource={datas} />              
+                <Table columns={cols} dataSource={this.state.data} />              
                 </div>
             </div>
 

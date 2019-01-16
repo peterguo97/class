@@ -3,3 +3,22 @@
     justify-content: center;
     padding-top: 10px;
 }
+
+.logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255,255,255,.2);
+    margin: 16px 24px 16px 0;
+    float: left;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapLeft {
+    width: 20%;
+    font-weight: bold;
+    padding-left: 5px;
+}
